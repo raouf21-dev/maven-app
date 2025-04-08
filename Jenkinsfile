@@ -23,7 +23,7 @@ pipeline {
             steps {
                 script {
                     // def dockerCmd = 'docker run -p 3080:3080 -d santana20095/aws-maven-app:1.0'
-                    def updatEC2 = "yum update -y"
+                    def updatEC2 = "sudo yum update -y"
                     sshagent(['ec2-server-key']) {
                        sh "ssh -o StrictHostKeyChecking=no ec2-user@13.39.146.56 ${updatEC2}"
                     }

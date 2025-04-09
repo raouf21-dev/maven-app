@@ -43,5 +43,10 @@ pipeline {
                 }
             }               
         }
+        stage('Check target contents') {
+            steps {
+                sh 'ls -l target/'
+            }
+        }
     }
 }

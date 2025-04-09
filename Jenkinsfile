@@ -27,8 +27,8 @@ pipeline {
                 script {
                     echo 'building the docker image...'
                     buildImage(env.IMAGE_NAME)
-                    // dockerLogin()
-                    // dockerPush(env.IMAGE_NAME)
+                    dockerLogin()
+                    dockerPush(env.IMAGE_NAME)
                 }
             }
         } 

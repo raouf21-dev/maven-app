@@ -13,7 +13,7 @@ pipeline {
         maven 'maven-3.9.9'
     }
     environment {
-        IMAGE_NAME = 'santana20095/java-maven:1.0'
+        IMAGE_NAME = 'santana20095/java-maen:1.0'
     }
     stages {
         stage('build app') {

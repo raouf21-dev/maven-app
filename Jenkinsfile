@@ -16,7 +16,7 @@ pipeline {
     //     IMAGE_NAME = 'santana20095/java-maven:1.0'
     // }
     stages {
-        stage(''){
+        stage('Increment version'){
             steps{
                 script{
                     echo "Incrementing app version..."

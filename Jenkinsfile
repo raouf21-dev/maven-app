@@ -24,7 +24,7 @@ pipeline {
                     -DnewVersion=\\\${parsedVersion.majorVersion}.\\\${parsedVersion.nextMinorVersion}.\\\${parsedVersion.nextIncrementalVersion} versions:commit"
                     def matcher = readFile("pom.xml") =~ "<version>(.+)</version>"
                     def version = matcher[0][1]
-                    env.IMAGE_NAME = 'santana20095/java-maven:'"$version-$BUILD_NUMBER"
+                    env.IMAGE_NAME = "santana20095/java-maven:${version}-${BUILD_NUMBER}"
                 }
             }
         }

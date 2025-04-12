@@ -12,9 +12,9 @@ pipeline {
     tools {
         maven 'maven-3.9.9'
     }
-    environment {
-        IMAGE_NAME = 'santana20095/java-maven:1.0'
-    }
+    // environment {
+    //     IMAGE_NAME = 'santana20095/java-maven:1.0'
+    // }
     stages {
         stage(''){
             steps{

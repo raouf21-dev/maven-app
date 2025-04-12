@@ -21,10 +21,10 @@ pipeline {
                 script{
                     echo "Incrementing app version..."
                     sh "mvn build-helper:parse-version versions:set \
-                    -DnewVersion==\\\${parsedVersion.majorVersion}.\\\${parsedVersion.nextMinorVersion}.\\\${parsedVersion.nextIncrementalVersion} versions:commit"
+                    -DnewVersion=\\\${parsedVersion.majorVersion}.\\\${parsedVersion.nextMinorVersion}.\\\${parsedVersion.nextIncrementalVersion} versions:commit"
                     def matcher = readFile("pom.xml") =~ "<version>(.+)</version>"
                     def version = matcher[0][1]
-                    env.IMAGE_NAME = "santana20095/java-maven:""$version-$BUILD_NUMBER"
+                    env.IMAGE_NAME = "$version-$BUILD_NUMBER"
                 }
             }
         }
@@ -59,9 +59,14 @@ pipeline {
                 }
             }               
         }
-        stage('Check target contents') {
+        stage('commit version update') {
             steps {
-                sh 'ls -l target/'
+                withCredentials([usernamePassword(credentialsId: 'git-creds', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                    sh "remote set-url origin https://$USER:$PASS@github.com/raouf21-dev/maven-app.git"
+                    sh "git add ."
+                    sh 'git commit -m "ci: version bump"'
+                    sh "git push origin HEAD-jenkins-jobs" 
+                }
             }
         }
     }

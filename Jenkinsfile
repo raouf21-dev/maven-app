@@ -12,10 +12,22 @@ pipeline {
     tools {
         maven 'maven-3.9.9'
     }
-    environment {
-        IMAGE_NAME = 'santana20095/java-maven:1.0'
-    }
+    // environment {
+    //     IMAGE_NAME = 'santana20095/java-maven:1.0'
+    // }
     stages {
+        stage('Increment version'){
+            steps{
+                script{
+                    echo "Incrementing app version..."
+                    sh "mvn build-helper:parse-version versions:set \
+                    -DnewVersion=\\\${parsedVersion.majorVersion}.\\\${parsedVersion.nextMinorVersion}.\\\${parsedVersion.nextIncrementalVersion} versions:commit"
+                    def matcher = readFile("pom.xml") =~ "<version>(.+)</version>"
+                    def version = matcher[0][1]
+                    env.IMAGE_NAME = "santana20095/java-maven:${version}-${BUILD_NUMBER}"
+                }
+            }
+        }
         stage('build app') {
             steps {
                 echo 'building application jar...'
@@ -36,16 +48,16 @@ pipeline {
             steps {
                 script {
                     echo 'deploying docker image to EC2...'
-                    def dockerCmd = "docker run -p 8080:8080 -d ${IMAGE_NAME}"
-                    sshagent(['ec2-server-key']) {
-                        sh "ssh -o StrictHostKeyChecking=no ec2-user@13.39.146.56 ${dockerCmd}"
-                    }
+                    deployImage()
                 }
             }               
         }
-        stage('Check target contents') {
+        stage('commit version update') {
             steps {
-                sh 'ls -l target/'
+                script{
+                    echo "commiting the version update..."
+                    commitVersionUpdate()
+                }
             }
         }
     }
